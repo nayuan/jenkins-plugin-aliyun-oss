@@ -1,0 +1,26 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:c="/lib/credentials">
+
+    <f:entry title="${%CredentialsId}" field="credentialsId">
+            <c:select/>
+    </f:entry>
+    <f:entry title="${%BucketName}" field="bucketName">
+        <f:textbox />
+    </f:entry>
+    <f:entry title="${%LocalPath}" field="localPath">
+        <f:textbox />
+    </f:entry>
+    <f:entry title="${%RemotePath}" field="remotePath">
+        <f:textbox />
+    </f:entry>
+
+    <f:advanced>
+        <f:entry title="${%ExcludeRegex}" field="excludeRegex">
+            <f:textbox />
+        </f:entry>
+        <f:entry title="${%SkipExist}" field="skipExist">
+            <f:booleanRadio />
+        </f:entry>
+    </f:advanced>
+
+</j:jelly>
