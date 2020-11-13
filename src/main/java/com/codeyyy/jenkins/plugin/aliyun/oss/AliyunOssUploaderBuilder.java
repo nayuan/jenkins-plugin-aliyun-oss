@@ -21,7 +21,9 @@ import java.io.PrintStream;
 
 public class AliyunOssUploaderBuilder extends Builder implements SimpleBuildStep {
 
-    private String credentialsId;
+    private String endpoint;
+    private String accessKeyId;
+    private Secret accessKeySecret;
     private String bucketName;
     private String localPath;
     private String remotePath;
@@ -30,14 +32,18 @@ public class AliyunOssUploaderBuilder extends Builder implements SimpleBuildStep
 
     @DataBoundConstructor
     public AliyunOssUploaderBuilder(
-            String credentialsId,
+            String endpoint,
+            String accessKeyId,
+            String accessKeySecret,
             String bucketName,
             String localPath,
             String remotePath,
             String excludeRegex,
             Boolean skipExist
     ) {
-        this.credentialsId = credentialsId;
+        this.endpoint = endpoint;
+        this.accessKeyId = accessKeyId;
+        this.accessKeySecret = Secret.fromString(accessKeySecret);
         this.bucketName = bucketName;
         this.localPath = localPath;
         this.remotePath = remotePath;
@@ -62,13 +68,12 @@ public class AliyunOssUploaderBuilder extends Builder implements SimpleBuildStep
             remotePath = remotePath.substring(0, remotePath.length() - 1);
         }
 
-        logger.println(credentialsId);
+        logger.println(endpoint);
         logger.println(remotePath);
 
         FilePath dir = new FilePath(workspace, localPath);
 
-//        OSS client = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret.getPlainText());
-        OSS client = null;
+        OSS client = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret.getPlainText());
         try{
             if(dir.isDirectory()) {
                 scan(client, "", dir, logger);
@@ -131,8 +136,16 @@ public class AliyunOssUploaderBuilder extends Builder implements SimpleBuildStep
 
     }
 
-    public String getCredentialsId() {
-        return credentialsId;
+    public String getEndpoint() {
+        return endpoint;
+    }
+
+    public String getAccessKeyId() {
+        return accessKeyId;
+    }
+
+    public String getAccessKeySecret() {
+        return accessKeySecret.getPlainText();
     }
 
     public String getBucketName() {
